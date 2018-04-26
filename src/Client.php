@@ -1,6 +1,6 @@
 <?php
 
-namespace NomorePackage\Zerobounce;
+namespace NomorePackage\ZeroBounce;
 
 use Exception;
 use GuzzleHttp\Client as Guzzle;
