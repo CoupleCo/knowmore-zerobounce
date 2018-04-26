@@ -1,6 +1,6 @@
 {
     "name": "nomorepackage/zerobounce",
-    "description": "Boilerplate package for creating other packages.",
+    "description": "Zerobounce package implementation",
     "keywords": ["template", "composer", "package"],
     "license": "MIT",
     "authors": [
@@ -18,7 +18,7 @@
     },
 	"autoload": {
         "psr-4": {
-            "ZeroBounce\\": "src/"
+            "NomorePackage\\ZeroBounce\\": "src/"
         }
     }
 }
