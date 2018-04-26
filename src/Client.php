@@ -7,12 +7,8 @@ use GuzzleHttp\Client as Guzzle;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
 
 /**
- *  A sample class
  *
- *  Use this section to define what this class is doing, the PHPDocumentator will use this
- *  to automatically generate an API documentation using this information.
- *
- * @author yourname
+ * @author Martin V.P
  */
 class Client {
 
@@ -32,61 +28,29 @@ class Client {
     }
 
 
-    public function request($method, $endpoint, $content = []) {
+    public function request($email) {
+
         try {
 
-            $url = $this->domain . $endpoint;
-            $response = $this->guzzle->request(
-                $method,
-                $url,
-                [
-                    'json' => $content,
-                    'auth' => [$this->username . '/token', $this->token],
-                ]
-            );
+            $url = $this->format_url($email);
 
-//            $this->logRateLimit($response->getHeaders());
+            $response = $this->guzzle->request('GET', $url);
 
             return $this->createResponse($response);
 
-        } catch (Exception $e) {
-            dd($e);
-        }
-
-    }
-
-    public function test($email){
-
-        $url = $this->format_url($email);
-
-        $response = $this->guzzle('GET', $url);
-
-        return $this->createResponse($response);
+        } catch (Exception $e) { return ['success' => false, 'message' => $e->getMessage()]; }
 
     }
 
     private function format_url($email){
 
-        return $this->domain . 'validate?apikey=' . $this->key . '&email=' - urlencode($email);
+        return $this->domain . 'validate?apikey=' . $this->key . '&email=' . urlencode($email);
 
     }
 
     protected function createResponse(GuzzleResponse $response) {
-        return (array)json_decode($response->getBody()->__toString());
+        return (array)json_decode($response->getBody());
     }
 
-
-
-//    protected function logRateLimit($headers) {
-//
-//
-//        $rate_limit = $headers['X-Rate-Limit-Remaining'][0];
-//
-//        if(isset($headers['Retry-After'])) Slack::freshdeskRateLimitReset();
-//
-//        if(intval($rate_limit) < 10){
-//            Slack::freshdeskRateLog(intval($rate_limit));
-//        }
-//    }
 
 }
