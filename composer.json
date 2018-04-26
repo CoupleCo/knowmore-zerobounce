@@ -1,5 +1,5 @@
 {
-    "name": "zerobounce",
+    "name": "nomorepackage/zerobounce",
     "description": "Boilerplate package for creating other packages.",
     "keywords": ["template", "composer", "package"],
     "license": "MIT",
