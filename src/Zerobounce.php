@@ -2,98 +2,97 @@
 
 namespace NomorePackage\ZeroBounce;
 
-class Zerobounce {
-
-    private $email;
-    private $client;
-    private $response;
-    private $error_message;
-
-    private $response_checked = false;
+class Zerobounce extends Utility {
 
     /**
-     * Zerobounce constructor.
+     * Always call this function to set the email and re-initiate the parent constructor
+     *
      * @param $email
+     * @return $this
      */
-    public function __construct($email) {
+    public function email($email) {
 
-        $this->email = $email;
+        parent::__construct($email);
 
-        $this->client = new Client();
+        return $this;
     }
 
-    public function clean(){
 
-        $response = $this->client->request($this->email);
+    /**
+     * Runs through all the available checks and returns the result
+     *
+     * @return $this
+     */
+    public function full_check(){
 
-        return (object)$response;
+        $this->isValid();
 
-    }
+        $this->isToxic();
 
-    public function check(){
+        $this->isDisposable();
 
-        if(!$this->response_handling()) return $this->response;
-
-        $this->response_checked = true;
-
-        if(!$this->valid()) return ['success' => false, 'message' => $this->error_message];
-
-        if(!$this->toxic()) return ['success' => false, 'message' => $this->error_message];
-
-        if(!$this->disposable()) return ['success' => false, 'message' => $this->error_message];
-
-        return ['success' => true, 'message' => 'nothing seems out of the ordinary'];
-    }
-
-    public function valid(){
-
-        if(!$this->response_handling()) return $this->response;
-
-        if(!isset($this->response->status)) return false;
-
-        if(strtolower($this->response->status) == 'valid') return true;
-
-        if(strtolower($this->response->status) == 'catch-all') return true;
-
-        return false;
-    }
-
-    public function toxic(){
-
-        if(!$this->response_handling()) return $this->response;
-
-        return  !$this->response->toxic;
+        return $this;
 
     }
 
-    public function disposable(){
+    /**
+     * Checks if the email is either a valid|catch-all|unknown origin
+     *
+     * @return $this
+     */
+    public function isValid(){
 
-        if(!$this->response_handling()) return $this->response;
+        if(!isset($this->response->status)) {
+            $this->is_valid = false;
 
-        if(!$this->response->disposable) return true;
+            return $this;
+        }
 
-        $this->error_message = 'Sorry we don\'t accept minute mails';
+        elseif(strtolower($this->response->status) == '') $this->is_valid = true;
 
-        return false;
+        elseif(strtolower($this->response->status) == 'valid') $this->is_valid = true;
+
+        elseif(strtolower($this->response->status) == 'unknown') $this->is_valid = true;
+
+        elseif(strtolower($this->response->status) == 'catch-all') $this->is_valid = true;
+
+        else $this->is_valid = false;
+
+        return $this;
     }
 
-    public function sub_status(){
+    /**
+     * Check if the email is from a toxic domain
+     *
+     * @return $this
+     */
+    public function isToxic(){
 
-        if($this->response->sub_status == '') return 'No error found';
+        if(!isset($this->response->toxic)) $this->is_toxic = false;
 
-        return str_replace('_', ' ', $this->response->sub_status);
+        else $this->is_toxic = $this->response->toxic;
+
+        return $this;
     }
 
-    private function response_handling(){
+    /**
+     * Checks if the email is from a known minute mail provider
+     * (emails that expires after e.g. 10min or 20min)
+     *
+     * @return $this
+     */
+    public function isDisposable(){
 
-        if(is_null($this->response)) $this->response = $this->clean();
+        if(!isset($this->response->disposable)) $this->is_disposable = false;
 
-        if($this->response_checked) return true;
+        elseif($this->response->disposable) {
+            $this->is_disposable = true;
 
-        if(isset($this->response->success) && !$this->response->success) return false;
+            $this->return_message = 'Sorry we don\'t accept minute mails';
 
-        $this->error_message = $this->sub_status();
+        } else $this->is_disposable = false;
 
-        return true;
+        return $this;
     }
+
 }
