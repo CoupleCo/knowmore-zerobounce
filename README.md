@@ -1,7 +1,7 @@
 Zerobounce Utility class
 =========================
 
-This package contains a general client, for creating requests and checking emails,
+This package contains a general client and utility class, for creating requests and checking emails,
 through the Zerobounce api. 
 
 Environment variables needed to make the package work
@@ -10,6 +10,7 @@ Environment variables needed to make the package work
 - ZEROBOUNCE_KEY = [your personal key]
 
 General docs - https://docs.zerobounce.net/docs
+
 To get api key(need personal login) - https://www.zerobounce.net/members/apikey/
 
 Features
@@ -28,12 +29,13 @@ if you call the get() method directly after setting the email you will get the d
 _returns:_
 
 if everything goes through: 
-get response - ['success' => true, 'message' => 'message from zerobounce']
-boolean response - true
+
+- get response - ['success' => true, 'message' => 'message from zerobounce']
+- boolean response - true
 
 if something is not valid: 
-get response - ['success' => false, 'message' => 'message from zerobounce']
-boolean response - false
+- get response - ['success' => false, 'message' => 'message from zerobounce']
+- boolean response - false
 
 **Check if is the email is valid**
 
