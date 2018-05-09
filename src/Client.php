@@ -21,8 +21,8 @@ class Client {
      */
     public function __construct() {
 
-        $this->domain = env('ZEROBOUNCE_DOMAIN');
-        $this->key = env('ZEROBOUNCE_KEY');
+        $this->domain = config('zerobounce.domain');
+        $this->key = config('zerobounce.key');
 
         $this->guzzle = new Guzzle;
     }
