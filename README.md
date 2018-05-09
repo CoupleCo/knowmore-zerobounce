@@ -13,6 +13,12 @@ General docs - https://docs.zerobounce.net/docs
 
 To get api key(need personal login) - https://www.zerobounce.net/members/apikey/
 
+To utilize the config file: 
+
+- php artisan vendor:publish --provider="NomorePackage\ZeroBounce\ZerobounceServiceProvider"
+
+- Remember to add 'NomorePackage\ZeroBounce\ZerobounceServiceProvider' as a provider in the config/app.php file
+
 Features
 --------
 **How to start**
